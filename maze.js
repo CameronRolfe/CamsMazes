@@ -36,14 +36,15 @@ class Cell {
 }
 
 class Maze {
-    constructor(numRows, numCols, startRow = 0, startCol = 0, endRow = null, endCol = null, seed = null) {
+    constructor(numRows, numCols, startRow = 0, startCol = 0, endRow = null, endCol = null) {
       this.numRows = numRows;
       this.numCols = numCols;
       this.startRow = startRow
       this.startCol = startCol
       this.endCol = (endRow) ? endRow : numRows - 1
       this.endRow = (endCol) ? endCol : numCols - 1
-      this.seed = seed
+
+      this.generateMaze()
     }
 
     initalizeMaze () {
@@ -165,7 +166,7 @@ class Maze {
     }
     
     solve() {
-        const grid = [...this.grid]
+        const grid = this.toGrid()
         const startCell = this.startGridCell
         const endCell = this.endGridCell
         const [startRow, startCol] = startCell;
@@ -290,13 +291,14 @@ class Maze {
         ctx.fillRect(x, y, cellSize, cellSize);
     }
 
-    toImage(cellSize, fileName="maze", fileExt="png", showSolution=false, saveImage = true) {
+    getMazeCanvas(cellSize, showSolution=false) {
         const imageWidth = this.gridCols * cellSize;
         const imageHeight = this.gridRows * cellSize
 
         const canvas = createCanvas(imageWidth, imageHeight)
         const ctx = canvas.getContext('2d')
-        const grid = (showSolution) ? this.gridSolution : this.grid
+        const grid = (showSolution) ? this.gridSolution : this.toGrid()
+        console.log(showSolution)
         for (let row = 0; row < this.gridRows; row++) {
             for (let col = 0; col < this.gridCols; col++) {
                 const cell = [row, col]
@@ -304,15 +306,26 @@ class Maze {
                 this.drawCell(ctx, cell, cellType, cellSize)
             }
         }
-        if (saveImage) {
-            const out = eval('require')('fs').createWriteStream(`${fileName}.${fileExt}`) // Eval required to work on browser
-            const stream = canvas.createPNGStream()
-            stream.pipe(out)
-            out.on('finish', () =>  console.log('The PNG file was created.'))
-        }
+        return canvas;
+    }
 
-        const image_base64 = canvas.toDataURL();
-        return image_base64;
+    getImageBase64(cellSize, showSolution=false) {
+        const canvas = this.getMazeCanvas(cellSize, showSolution)
+        return canvas.toDataURL();
+    }
+    
+    save(fileName="maze", fileExt="png", cellSize=10, showSolution=false) {
+        if (!["png", "jpg", "jpeg"].includes(fileExt)) {
+            console.log("Unsupported file type");
+            return;
+        }
+        const canvas = this.getMazeCanvas(cellSize, showSolution)
+        const out = eval('require')('fs').createWriteStream(`${fileName}.${fileExt}`)
+        let stream = null;
+        if (fileExt === "png") stream = canvas.createPNGStream()
+        else if(fileExt == "jpg" || fileExt === "jpeg") stream = canvas.createJPEGStream()
+        stream.pipe(out)
+        out.on('finish', () =>  console.log(`${fileName}.${fileExt} was created.`))
     }
 }
 
