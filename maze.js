@@ -103,7 +103,7 @@ class Maze {
                 // Adding neighbour and wall to generation path
                 const wall = cell.getWall(neighbourPos)
                 generationPath.push(wall) // Wall between cell and neighbour
-                generationPath.push(neighbour.grid_cell) // Neighbour
+                generationPath.push(neighbour.gridCell) // Neighbour
                 
                 // Updating walls for current cell and neighbour
                 cell.updateWalls(neighbourPos)
