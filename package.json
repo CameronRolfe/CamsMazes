@@ -3,7 +3,7 @@
     "canvas": "^2.11.2"
   },
   "name": "camsmazes",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A node package that generates mazes",
   "main": "maze.js",
   "devDependencies": {},

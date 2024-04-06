@@ -41,8 +41,8 @@ class Maze {
       this.numCols = numCols;
       this.startRow = startRow
       this.startCol = startCol
-      this.endCol = (endRow) ? endRow : numRows - 1
-      this.endRow = (endCol) ? endCol : numCols - 1
+      this.endRow = (endRow) ? endRow : numRows - 1
+      this.endCol = (endCol) ? endCol : numCols - 1
 
       this.generateMaze()
     }
