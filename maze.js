@@ -298,7 +298,6 @@ class Maze {
         const canvas = createCanvas(imageWidth, imageHeight)
         const ctx = canvas.getContext('2d')
         const grid = (showSolution) ? this.gridSolution : this.toGrid()
-        console.log(showSolution)
         for (let row = 0; row < this.gridRows; row++) {
             for (let col = 0; col < this.gridCols; col++) {
                 const cell = [row, col]
